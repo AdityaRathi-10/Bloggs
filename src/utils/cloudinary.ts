@@ -1,0 +1,41 @@
+import { v2 as cloudinary } from "cloudinary";
+
+cloudinary.config({
+  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+interface CloudinaryUploadResult {
+  public_id: string;
+  secure_url: string;
+  [key: string]: any;
+}
+
+export async function uploadImageToCloud(file: File | Blob) {
+  try {
+    console.log("file", file);
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+    const result = await new Promise<CloudinaryUploadResult>(
+      (resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          {
+            folder: "next-cloudinary",
+          },
+          (error, result) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(result as CloudinaryUploadResult);
+            }
+          }
+        );
+        uploadStream.end(buffer);
+      }
+    );
+    return result;
+  } catch (error) {
+    console.error("Upload image failed", error);
+  }
+}
