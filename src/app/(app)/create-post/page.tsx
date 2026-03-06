@@ -19,7 +19,7 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
-import { tags } from "@/lib/tags.json"
+import tags from "@/lib/tags.json"
 
 export default function CreatePostPage() {
 

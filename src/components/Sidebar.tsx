@@ -9,7 +9,7 @@ import { Separator } from "@/components/ui/separator"
 import { useState } from "react"
 import { X, Filter, Calendar, Tag } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { tags } from "@/lib/tags.json"
+import tags from "@/lib/tags.json"
 
 interface BlogSidebarProps {
   className?: string

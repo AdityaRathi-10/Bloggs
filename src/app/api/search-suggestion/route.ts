@@ -3,7 +3,7 @@ import dbConnect from "@/utils/dbConnet";
 import User from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 import * as cheerio from 'cheerio';
-import { tags } from "@/lib/tags.json"
+import tags from "@/lib/tags.json"
 
 export async function GET(request: NextRequest) {
     const query: string = request.nextUrl.searchParams.get("query") as string
