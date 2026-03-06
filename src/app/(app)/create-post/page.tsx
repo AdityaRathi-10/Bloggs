@@ -8,14 +8,14 @@ import "froala-editor/js/plugins/char_counter.min.js";
 import "froala-editor/js/plugins/save.min.js";
 import "froala-editor/js/plugins/markdown.min.js";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Loader2, Upload, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import axios, { AxiosError } from "axios"
 import { APIResponse } from "@/utils/ApiResponse";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
@@ -93,25 +93,24 @@ export default function CreatePostPage() {
     }
   }, [tagsAdded])
 
-  if(editPostId) {
-    useEffect(() => {
-      try {
-        const getPost = async () => {
-          const {editPost} = (await axios.get(`/api/${editPostId}/get`)).data
-          const div = document.createElement("div")
-          div.innerHTML = editPost.title
-          setTitleModel(div.textContent || div.innerText || "")
-          div.innerHTML = editPost.description
-          setDescriptionModel(div.textContent || div.innerText || "")
-          setPreviewUrl(editPost.image)
-          setAddedTags(editPost.tags)
-        }
-        getPost()
-      } catch (error) {
-        console.log("Error:", error)
+  useEffect(() => {
+    if(!editPostId) return;
+    try {
+      const getPost = async () => {
+        const {editPost} = (await axios.get(`/api/${editPostId}/get`)).data
+        const div = document.createElement("div")
+        div.innerHTML = editPost.title
+        setTitleModel(div.textContent || div.innerText || "")
+        div.innerHTML = editPost.description
+        setDescriptionModel(div.textContent || div.innerText || "")
+        setPreviewUrl(editPost.image)
+        setAddedTags(editPost.tags)
       }
-    }, [editPostId])
-  }
+      getPost()
+    } catch (error) {
+      console.log("Error:", error)
+    }
+  }, [editPostId])
 
   const router = useRouter()
   const {data: session} = useSession()
@@ -148,7 +147,7 @@ export default function CreatePostPage() {
           }
         );
         if(!response.data.success) {
-          toast.error("error", response.data.message)
+          toast.error(response.data.message)
         } 
         toast.success("success", {
           description: response.data.message,
@@ -160,7 +159,7 @@ export default function CreatePostPage() {
         window.localStorage.removeItem("tags")
       } catch (error) {
         const axiosError = error as AxiosError<APIResponse>
-        toast.error("Error", axiosError.response?.data.message)
+        toast.error(axiosError.response?.data.message)
         console.error("Failed to create post", error);
       } finally {
         router.replace(`/dashboard/${session?.user?._id}`)
@@ -172,9 +171,9 @@ export default function CreatePostPage() {
     return <Loader2 className="w-4 h-4 animate-spin" />;
   }
 
-  const handleFileUpload = (e: any) => {
-    if (e.target.files.length > 0) {
-      const file = e.target.files[0];
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files!.length > 0) {
+      const file = e.target.files![0];
       if(!file) return
       setSelectedFile(file);
       setFileName(file.name);
@@ -301,8 +300,8 @@ export default function CreatePostPage() {
           <div className="mt-10 flex gap-2 flex-wrap">
             {
               tagsAdded.length > 0 
-              ? tagsAdded.map((tag) => (
-                <div className="badge shadow-md bg-blue-300 dark:bg-blue-800 dark:text-white py-4 px-2 text-[16px]">{tag}
+              ? tagsAdded.map((tag, index) => (
+                <div key={index} className="badge shadow-md bg-blue-300 dark:bg-blue-800 dark:text-white py-4 px-2 text-[16px]">{tag}
                 <div className="tooltip tooltip-info" data-tip="Delete Tag">
                 <X className="h-5" color="red" size={18} onClick={() => {
                   setAddedTags((prev) => prev.filter((prevTag) => prevTag !== tag))

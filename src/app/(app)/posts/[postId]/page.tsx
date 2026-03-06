@@ -22,14 +22,10 @@ import Link from "next/link";
 import Bookmark from "@/components/Bookmark"
 import { redirect } from "next/navigation";
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 require("@/models/Comment")
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 require("@/models/User")
-
-// type TCommenters = {
-//     username: string
-//     profileImage: string
-//     userId: string
-// }
 
 export default async function BlogPostPage({ params }: { params: { postId: string } }) {
     await dbConnect()
@@ -49,7 +45,7 @@ export default async function BlogPostPage({ params }: { params: { postId: strin
             <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center">
                 <div className="text-center">
                     <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">Post not found</h1>
-                    <p className="text-slate-600 dark:text-slate-400">The post you're looking for doesn't exist.</p>
+                    <p className="text-slate-600 dark:text-slate-400">The post you&apos;re looking for doesn&apos;t exist.</p>
                 </div>
             </div>
         );

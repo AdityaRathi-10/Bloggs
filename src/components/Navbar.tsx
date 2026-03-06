@@ -28,7 +28,8 @@ import {
   UserMinus,
   MessageCircle,
   X,
-  Clock
+  Clock,
+  LucideProps
 } from "lucide-react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import Link from "next/link"
@@ -222,7 +223,12 @@ export default function Navbar() {
     setSearchHistory((prev: any) => prev?.filter((item: TSearchHistory) => item.query !== history))
   }
 
-  const MobileNavItem = ({ href, label, icon: Icon, onClick }: any) => (
+  const MobileNavItem = ({ href, label, icon: Icon, onClick }: {
+    href: string,
+    label: string,
+    icon: React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>,
+    onClick: () => void
+  }) => (
     <Link
       href={href}
       className="flex items-center gap-3 px-4 py-3 text-slate-700 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-300 dark:hover:text-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
@@ -435,7 +441,7 @@ export default function Navbar() {
                         </div>
                         <h4 className="font-medium text-sm mb-2">No notifications yet</h4>
                         <p className="text-xs text-muted-foreground leading-relaxed">
-                          When you get notifications, they'll show up here
+                          When you get notifications, they&apos;ll show up here
                         </p>
                       </div>
                     )}

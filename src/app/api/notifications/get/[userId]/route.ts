@@ -3,7 +3,7 @@ import dbConnect from "@/utils/dbConnet"
 import mongoose from "mongoose"
 import { NextResponse } from "next/server"
 
-export async function GET(_: any, {params}: {params: {userId: string}}) {
+export async function GET(_: unknown, {params}: {params: {userId: string}}) {
     const {userId} = params
 
     await dbConnect()

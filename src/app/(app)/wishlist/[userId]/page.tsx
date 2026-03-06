@@ -7,6 +7,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/options";
 import { redirect } from "next/navigation";
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 require("@/models/Post");
 
 export default async function WishlistPage({
@@ -44,7 +45,7 @@ export default async function WishlistPage({
   return (
     <div className="pb-4">
       <h1 className="text-3xl font-bold m-3 ml-10 italic">
-        <span className="bg-gradient-to-r from-blue-700 to-purple-700 dark:bg-gradient-to-r dark:from-blue-500 dark:to-purple-500 bg-clip-text text-transparent">{user?.username}'s</span> Wishlist...
+        <span className="bg-gradient-to-r from-blue-700 to-purple-700 dark:bg-gradient-to-r dark:from-blue-500 dark:to-purple-500 bg-clip-text text-transparent">{user?.username}&apos;s</span> Wishlist...
       </h1>
       <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 m-10 gap-y-10 gap-x-10">
         {user?.wishlist && user?.wishlist.length > 0 ? (

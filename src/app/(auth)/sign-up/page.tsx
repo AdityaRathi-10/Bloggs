@@ -145,6 +145,7 @@ export default function SignUpPage() {
                         type="file"
                         className="bg-gray-300 dark:bg-gray-600"
                         onChange={(e) => {
+                          onChange(e);
                           if (e.target.files!.length > 0) {
                             const file = e.target.files![0];
                             if (!file) return;

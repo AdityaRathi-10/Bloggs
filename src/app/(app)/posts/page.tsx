@@ -5,7 +5,6 @@ import Post from "@/models/Post"
 import User from "@/models/User"
 import dbConnect from "@/utils/dbConnet"
 import { getServerSession } from "next-auth"
-import { redirect } from "next/navigation"
 
 type SearchParams = {
   search: string

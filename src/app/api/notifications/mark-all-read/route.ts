@@ -4,7 +4,7 @@ import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "../../auth/[...nextauth]/options";
 
-export async function PATCH(request: NextRequest) {
+export async function PATCH() {
     const session = await getServerSession(authOptions)
 
     await dbConnect()

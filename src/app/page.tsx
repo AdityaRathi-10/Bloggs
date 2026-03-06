@@ -21,25 +21,17 @@ import {
   PenBoxIcon,
   LogOut,
   Sun,
-  Moon,
-  UserPlus2
+  Moon
 } from "lucide-react"
 import Link from "next/link"
 import {  useState } from "react"
 import { signOut, useSession } from "next-auth/react"
 import { useTheme } from "next-themes"
-import { Skeleton } from "@/components/ui/skeleton"
 
 function SiteHeader() {
   const [isOpen, setIsOpen] = useState(false)
-  const { data: session, status } = useSession()
+  const { data: session } = useSession()
   const { theme, setTheme } = useTheme()
-
-  // if(status === "loading") {
-  //   return (
-  //     <Skeleton className="w-full h-24" />
-  //   )
-  // }
 
   const navigation = [
     { name: "Home", href: "/" },

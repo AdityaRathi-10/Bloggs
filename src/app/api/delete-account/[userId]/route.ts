@@ -6,7 +6,7 @@ import User from "@/models/User"
 import dbConnect from "@/utils/dbConnet"
 import { NextResponse } from "next/server"
 
-export async function DELETE(_: any, {params}: {params: {userId: string}}) {
+export async function DELETE(_: unknown, {params}: {params: {userId: string}}) {
     const {userId} = params
 
     await dbConnect()

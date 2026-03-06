@@ -9,12 +9,11 @@ cloudinary.config({
 interface CloudinaryUploadResult {
   public_id: string;
   secure_url: string;
-  [key: string]: any;
+  [key: string]: string | number | boolean;
 }
 
 export async function uploadImageToCloud(file: File | Blob) {
   try {
-    console.log("file", file);
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
     const result = await new Promise<CloudinaryUploadResult>(

@@ -1,4 +1,4 @@
-function ApiResponse(success: boolean, message: any, status: number) {
+function ApiResponse(success: boolean, message: string, status: number) {
     return Response.json({
         success,
         message
@@ -11,7 +11,7 @@ export { ApiResponse }
 
 export interface APIResponse {
     success: boolean;
-    message: any;
+    message: string;
     status: number;
     userId?: string
 }

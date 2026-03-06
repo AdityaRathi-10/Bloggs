@@ -3,9 +3,8 @@
 import Image from "next/image"
 import Link from "next/link"
 import { MessageCircle, EllipsisVertical, Trash2, Heart, Eye, Edit2, Link2 } from "lucide-react"
-import { useEffect, useRef, useState } from "react"
+import { useState } from "react"
 import axios, { type AxiosError } from "axios"
-import { useParams } from "next/navigation"
 import type { APIResponse } from "@/utils/ApiResponse"
 import { toast } from "sonner"
 
@@ -71,11 +70,11 @@ export default function PostCard({
   const { data: session } = useSession()
   const router = useRouter()
 
-  const handleMenu = async (e: any) => {
+  const handleMenu = async () => {
     setOpenMenu((prev) => !prev)
   }
 
-  const handleDeletePost = async (e: any) => {
+  const handleDeletePost = async () => {
     try {
       const response = await axios.delete<APIResponse>(`/api/delete-post/${id}?userId=${session?.user._id}`)
       if (!response.data.success) {

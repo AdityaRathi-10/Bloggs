@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
       profileImage: result?.secure_url
     });
 
-    const { data, error } = await resend.emails.send({
+    const { error } = await resend.emails.send({
       from: 'Bloggs <onboarding@resend.dev>',
       to: "personalusekeliye789@gmail.com",
       subject: 'Email Verfication for Bloggs',

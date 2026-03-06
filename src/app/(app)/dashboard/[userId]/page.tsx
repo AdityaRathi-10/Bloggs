@@ -11,10 +11,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 require("@/models/Comment")
 
 export default async function DashboardPage({params}: {params: {userId: string}}) {
-  let {userId} = params
+  const {userId} = params
   const session = await getServerSession(authOptions)
 
   if(!session) {

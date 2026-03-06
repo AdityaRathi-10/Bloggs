@@ -14,10 +14,9 @@ import { Button } from "@/components/ui/button";
 import { APIResponse } from "@/utils/ApiResponse";
 import { AlertDialogDescription } from "@radix-ui/react-alert-dialog";
 import axios, { AxiosError } from "axios";
-import { Loader } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Skeleton } from "./ui/skeleton";
@@ -60,7 +59,7 @@ export default function FollowButton({ status, followers, posts }: { status: boo
       }
     } catch (error) {
       const axiosError = error as AxiosError<APIResponse>;
-      toast.error("Error", axiosError.response?.data.message);
+      toast.error(axiosError.response?.data.message);
     } finally {
       setIsSubmitting(false)
     }

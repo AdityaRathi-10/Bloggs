@@ -20,7 +20,7 @@ async function dbConnect() {
         connection.isConnected = db.connections[0].readyState
         console.log("Database connected successfully")
     } catch (error) {
-        throw new Error("Error connecting to database")
+        throw new Error(`Error connecting to database: ${error}`)
     }
 }
 

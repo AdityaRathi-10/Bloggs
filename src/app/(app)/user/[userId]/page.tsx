@@ -13,6 +13,7 @@ import { formatDate2 } from "@/utils/formatDate"
 import Link from "next/link"
 import DeleteAccount from "@/components/DeleteAccount"
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 require("@/models/Post")
 
 export default async function UserAccountPage({ params }: { params: { userId: string } }) {

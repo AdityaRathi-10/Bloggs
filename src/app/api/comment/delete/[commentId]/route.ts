@@ -2,7 +2,6 @@ import Comment from "@/models/Comment";
 import Post from "@/models/Post";
 import User from "@/models/User"
 import dbConnect from "@/utils/dbConnet";
-import mongoose from "mongoose";
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 

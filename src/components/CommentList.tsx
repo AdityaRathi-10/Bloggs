@@ -30,14 +30,6 @@ export default function CommentList({id, commentedBy, createdAt, content, isAuth
     const [comment, setComment] = useState(content)
     const router = useRouter()
     const {postId} = useParams()
-    const searchParams = useSearchParams()
-    const pathname = usePathname()
-
-    const createQueryString = useCallback((name: string, value: string) => {
-        const params = new URLSearchParams(searchParams.toString())
-        params.set(name, value)
-        return params.toString()
-    }, [searchParams])
 
     const handleEditComment = async (commentId: string) => {
         try {
