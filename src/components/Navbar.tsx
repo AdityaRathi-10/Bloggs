@@ -106,7 +106,7 @@ export default function Navbar() {
 
   useEffect(() => {
     setUserSession(session)
-  }, [status])
+  }, [status, session])
 
   const debouncedRecommendations = useDebounceCallback(getSearchRecommendations, 200)
 
@@ -150,7 +150,7 @@ export default function Navbar() {
 
   const handleNotificationRead = async (notification: TNotification) => {
     try {
-      router.replace(notificationsConfig(notification.type, notification)?.navigateTo!)
+      router.replace(notificationsConfig(notification.type, notification)!.navigateTo!)
       await axios.post(
         `/api/notifications/read`,
         {
@@ -165,10 +165,10 @@ export default function Navbar() {
     } catch (error) {
       console.log("Error:", error)
     } finally {
-      setNotifications((prev: any) => {
+      setNotifications((prev) => {
         if (!prev) return prev
         return prev.map((notif: TNotification) =>
-          notif._id === String(notification._id) ? { ...notif, read: true } : notif,
+          notif._id === String(notification._id) ? { ...notif, read: true } as TNotification : notif,
         )
       })
     }
@@ -176,36 +176,38 @@ export default function Navbar() {
 
   const handleMarkAllRead = async () => {
     if(notifications?.every((item) => item.read === true)) return
-    setNotifications((prev: any) => {
-      if(!prev) return
-      return prev.map((item: TNotification) => ({...item, read: true}))
+    setNotifications((prev: TNotification[] | null) => {
+      if(!prev) return null;
+      return prev.map((item: TNotification) => ({...item, read: true} as TNotification))
     })
     const response = (await axios.patch("/api/notifications/mark-all-read"))
     if(response.data.success) toast(response.data.message)
   }
 
-  const updatedSearchHistory = async (query: any) => {
-    setSearchHistory((prev: any) => {
-      if (!prev) return [{ query: query }]
-      if (Array.isArray(prev) && prev.includes(query)) return prev
-      return [{ query: query }, ...prev]
-    })
-    const response = await axios.post(
-      "/api/search-history",
-      {
-        query,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    )
-    if (!response.data.success) {
-      return toast(response.data.message)
+  const updatedSearchHistory = async (query: string) => {
+    setSearchHistory((prev: TSearchHistory[] | null) => {
+      if (!prev) return [{ query } as TSearchHistory];
+      if (prev.some(item => item.query === query)) return prev;
+      return [{ query } as TSearchHistory, ...prev];
+    });
+
+    try {
+      const response = await axios.post(
+        "/api/search-history",
+        { query },
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      if (!response.data.success) {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to update search history");
     }
-    return
-  }
+  };
 
   const handleSearch = async () => {
     if (searchValue.trim()) {
@@ -220,7 +222,7 @@ export default function Navbar() {
   }
 
   const handleDeleteSearchHistory = async (history: string) => {
-    setSearchHistory((prev: any) => prev?.filter((item: TSearchHistory) => item.query !== history))
+    setSearchHistory((prev) => prev ? prev?.filter((item) => item.query !== history) : null)
   }
 
   const MobileNavItem = ({ href, label, icon: Icon, onClick }: {

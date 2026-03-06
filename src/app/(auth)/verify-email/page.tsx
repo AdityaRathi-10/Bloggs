@@ -36,7 +36,7 @@ export default function VerifyEmailPage() {
         } catch (error) {
             console.log("Error:", error)
         }
-    }, [])
+    }, [token, router])
 
     if(status === "loading") {
         return (

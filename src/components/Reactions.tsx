@@ -94,7 +94,9 @@ export default function Reactions({
             setIsDisliked(prevDisliked);
             setLikeCount(likes);
             setDislikeCount(dislikes);
-            toast.error("Failed to update reaction.");
+            toast.error("Failed to update reaction", {
+                description: `${err}` 
+            });
         }
     }
 

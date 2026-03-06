@@ -6,11 +6,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { Edit, MoreHorizontal, Reply, Save, Trash2, User } from "lucide-react";
 import { formatDate } from "@/utils/formatDate";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { Input } from "./ui/input";
 import axios from "axios";
 import { toast } from "sonner";
-import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 interface Comment {
     id: string,

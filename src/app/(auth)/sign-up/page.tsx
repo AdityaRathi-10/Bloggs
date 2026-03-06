@@ -135,7 +135,7 @@ export default function SignUpPage() {
               <FormField
                 name="profileImage"
                 control={form.control}
-                render={({ field: { value, onChange, ...rest } }) => (
+                render={({ field: { onChange, ...rest } }) => (
                   <FormItem>
                     <FormLabel>
                       Avatar<span className="text-xs">(optional)</span>

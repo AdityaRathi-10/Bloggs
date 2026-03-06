@@ -34,7 +34,7 @@ export default function FollowButton({ status, followers, posts }: { status: boo
     if(session) {
       setFollowed(status)
     }
-  }, [session])
+  }, [session, status])
 
   const handleFollow = async () => {
     const newState = !followed

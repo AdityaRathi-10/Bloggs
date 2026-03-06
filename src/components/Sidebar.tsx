@@ -93,8 +93,8 @@ export default function BlogSidebar({ className }: BlogSidebarProps) {
             </SelectTrigger>
             <SelectContent>
               {
-                tags.map((tag) => (
-                  <SelectItem value={tag}>{tag}</SelectItem>
+                tags.map((tag, index) => (
+                  <SelectItem key={index} value={tag}>{tag}</SelectItem>
                 ))
               }
             </SelectContent>
