@@ -2,8 +2,12 @@ import Post from "@/models/Post";
 import dbConnect from "@/utils/dbConnet";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest, {params}: {params: {postId: string}}) {
-    const {postId} = params
+type BlogPostPageProps = {
+  params: Promise<{ postId: string }>;
+};
+
+export async function GET(request: NextRequest, {params}: BlogPostPageProps) {
+    const {postId} = await params
 
     await dbConnect()
     const editPost = await Post.findById(postId).select("title description image tags")

@@ -1,12 +1,14 @@
 "use client";
 
-import FroalaEditor from "react-froala-wysiwyg";
+import dynamic from "next/dynamic";
+
+const FroalaEditor = dynamic(
+  () => import("react-froala-wysiwyg"),
+  { ssr: false }
+);
+
 import "froala-editor/css/froala_style.min.css";
 import "froala-editor/css/froala_editor.pkgd.min.css";
-import "froala-editor/js/plugins/image.min.js";
-import "froala-editor/js/plugins/char_counter.min.js";
-import "froala-editor/js/plugins/save.min.js";
-import "froala-editor/js/plugins/markdown.min.js";
 
 import { useEffect, useState } from "react";
 import { Loader2, Upload, X } from "lucide-react";
@@ -20,6 +22,7 @@ import { toast } from "sonner";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import tags from "@/lib/tags.json"
+
 
 export default function CreatePostPage() {
 
@@ -50,6 +53,13 @@ export default function CreatePostPage() {
   const [inputValue, setInputValue] = useState("")
   const [tagsAdded, setAddedTags] = useState<string[]>([])
   const editPostId = useSearchParams().get("edit")
+
+  useEffect(() => {
+    import("froala-editor/js/plugins/image.min.js");
+    import("froala-editor/js/plugins/char_counter.min.js");
+    import("froala-editor/js/plugins/save.min.js");
+    import("froala-editor/js/plugins/markdown.min.js");
+  }, [])
 
   useEffect(() => {
     const values = tags.filter((tag) => tag.toLowerCase().includes(inputValue.toLowerCase()))

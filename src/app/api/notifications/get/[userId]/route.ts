@@ -3,8 +3,13 @@ import dbConnect from "@/utils/dbConnet"
 import mongoose from "mongoose"
 import { NextResponse } from "next/server"
 
-export async function GET(_: unknown, {params}: {params: {userId: string}}) {
-    const {userId} = params
+type UserProps = {
+  params: Promise<{ userId: string }>;
+};
+
+
+export async function GET(_: unknown, {params}: UserProps) {
+    const {userId} = await params
 
     await dbConnect()
     const notifications = await Notification.find({

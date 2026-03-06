@@ -10,12 +10,15 @@ import { redirect } from "next/navigation";
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 require("@/models/Post");
 
+type WishlistPageProps = {
+  params: Promise<{ userId: string }>;
+};
+
+
 export default async function WishlistPage({
   params,
-}: {
-  params: { userId: string };
-}) {
-  const { userId } = params;
+}: WishlistPageProps) {
+  const { userId } = await params;
 
   const user = await User.findById(userId).populate("wishlist");
   const session = await getServerSession(authOptions)

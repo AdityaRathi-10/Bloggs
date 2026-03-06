@@ -16,9 +16,14 @@ import DeleteAccount from "@/components/DeleteAccount"
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 require("@/models/Post")
 
-export default async function UserAccountPage({ params }: { params: { userId: string } }) {
+type UserAccountPageProps = {
+  params: Promise<{ userId: string }>;
+};
+
+export default async function UserAccountPage({ params }: UserAccountPageProps) {
   await dbConnect()
-  const user = await User.findById(params.userId).populate("posts").select("-password")
+  const {userId} = await params
+  const user = await User.findById(userId).populate("posts").select("-password")
 
   if (!user) {
     return (

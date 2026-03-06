@@ -6,11 +6,16 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]/options";
 import Notification from "@/models/Notification";
 
+type BlogPostPageProps = {
+  params: Promise<{ postId: string }>;
+};
+
 export async function POST(
     request: NextRequest,
-    { params }: { params: { postId: string } }
+    { params }: BlogPostPageProps
 ) {
     const session = await getServerSession(authOptions);
+    const {postId} = await params
     if (!session?.user?.email) {
         return NextResponse.json(
             { success: false, message: "Unauthorized" },
@@ -27,7 +32,7 @@ export async function POST(
     }
 
     await dbConnect();
-    const post = await Post.findById(params.postId);
+    const post = await Post.findById(postId);
     if (!post) {
         return NextResponse.json(
             { success: false, message: "Post not found" },

@@ -14,8 +14,12 @@ import { redirect } from "next/navigation";
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 require("@/models/Comment")
 
-export default async function DashboardPage({params}: {params: {userId: string}}) {
-  const {userId} = params
+type DashboardPageProps = {
+  params: Promise<{ userId: string }>;
+};
+
+export default async function DashboardPage({params}: DashboardPageProps) {
+  const {userId} = await params
   const session = await getServerSession(authOptions)
 
   if(!session) {

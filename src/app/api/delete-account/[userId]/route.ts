@@ -6,8 +6,13 @@ import User from "@/models/User"
 import dbConnect from "@/utils/dbConnet"
 import { NextResponse } from "next/server"
 
-export async function DELETE(_: unknown, {params}: {params: {userId: string}}) {
-    const {userId} = params
+type UserProps = {
+  params: Promise<{ userId: string }>;
+};
+
+
+export async function DELETE(_: unknown, {params}: UserProps) {
+    const {userId} = await params
 
     await dbConnect()
     const deletedUser = await User.findByIdAndDelete(userId)

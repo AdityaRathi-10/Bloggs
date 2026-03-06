@@ -6,18 +6,22 @@ import User from "@/models/User"
 import dbConnect from "@/utils/dbConnet"
 import { getServerSession } from "next-auth"
 
+export const dynamic = "force-dynamic";
+
 type SearchParams = {
-  search: string
-  category: string | string[]
-  sort: string
+  searchParams: Promise<{
+    search: string
+    category: string | string[]
+    sort: string
+  }>
 }
 
-export default async function PostsPage({searchParams}: {searchParams: SearchParams} ) {
+export default async function PostsPage({searchParams}: SearchParams ) {
   await dbConnect()
 
   const posts = await Post.find()
 
-  const {search, category, sort} = searchParams
+  const {search, category, sort} = await searchParams
 
   let filteredPosts = posts
 

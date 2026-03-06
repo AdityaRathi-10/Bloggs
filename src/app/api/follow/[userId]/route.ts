@@ -4,8 +4,12 @@ import dbConnect from "@/utils/dbConnet";
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(request: NextRequest, {params}: {params: {userId: string}}) {
-    const {userId} = params
+type UserProps = {
+  params: Promise<{ userId: string }>;
+};
+
+export async function POST(request: NextRequest, {params}: UserProps) {
+    const {userId} = await params
     const {follower, followStatus} = await request.json()
 
     dbConnect()

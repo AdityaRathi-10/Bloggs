@@ -6,8 +6,12 @@ import dbConnect from "@/utils/dbConnet";
 import { authOptions } from "@/app/api/auth/[...nextauth]/options"
 import mongoose from "mongoose";
 
-export async function DELETE(request: NextRequest, {params}: {params: {postId: string}}) {
-    const {postId} = params
+type BlogPostPageProps = {
+  params: Promise<{ postId: string }>;
+};
+
+export async function DELETE(request: NextRequest, {params}: BlogPostPageProps) {
+    const {postId} = await params
     const queryParams = request.nextUrl.searchParams
     
     const userId = queryParams.get("userId")

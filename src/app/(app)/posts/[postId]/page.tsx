@@ -27,9 +27,13 @@ require("@/models/Comment")
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 require("@/models/User")
 
-export default async function BlogPostPage({ params }: { params: { postId: string } }) {
+type BlogPostPageProps = {
+  params: Promise<{ postId: string }>;
+};
+
+export default async function BlogPostPage({ params }: BlogPostPageProps) {
     await dbConnect()
-    const {postId} = params
+    const {postId} = await params
     const post: TPost | null = await Post.findById(postId)
         .populate("createdBy")
         .populate({

@@ -5,11 +5,15 @@ import dbConnect from "@/utils/dbConnet";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]/options";
 
+type BlogPostPageProps = {
+  params: Promise<{ postId: string }>;
+};
+
 export async function POST(
     request: NextRequest,
-    { params }: { params: { postId: string } }
+    { params }: BlogPostPageProps
 ) {
-    const { postId } = params;
+    const { postId } = await params;
     const { isBookmarked } = await request.json()
     const session = await getServerSession(authOptions)
 
