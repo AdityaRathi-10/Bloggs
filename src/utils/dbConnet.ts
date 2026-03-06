@@ -6,6 +6,10 @@ type ConnectionObject = {
 
 const connection: ConnectionObject = {}
 
+mongoose.connect(process.env.MONGODB_URI!).then(() => {
+  console.log("Atlas cluster awake ✅");
+});
+
 async function dbConnect() {
     if (connection.isConnected) {
         console.log("Already connected to database")

@@ -35,11 +35,11 @@ function SiteHeader() {
   const { data: session, status } = useSession()
   const { theme, setTheme } = useTheme()
 
-  if(status === "loading") {
-    return (
-      <Skeleton className="w-full h-24" />
-    )
-  }
+  // if(status === "loading") {
+  //   return (
+  //     <Skeleton className="w-full h-24" />
+  //   )
+  // }
 
   const navigation = [
     { name: "Home", href: "/" },

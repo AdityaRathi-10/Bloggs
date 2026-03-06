@@ -40,15 +40,6 @@ export default function SignUpPage() {
     },
   });
 
-  const handleFileUpload = (e: any) => {
-    console.log(e);
-    if (e.target.files.length > 0) {
-      const file = e.target.files[0];
-      if (!file) return;
-      setSelectedFile(file);
-    }
-  };
-
   const onSubmit = async (data: z.infer<typeof signUpSchema>) => {
     setIsSubmitting(true);
     console.log(selectedFile);
@@ -198,7 +189,7 @@ export default function SignUpPage() {
               onClick={() => signIn("google")}
               className="shadow-sm py-5 text-md rounded-md w-full bg-white text-gray-800 cursor-pointer border-2 hover:text-white hover:bg-gray-700"
             >
-              Sign up with Google{" "}
+              Sign in with Google{" "}
               <Image
                 src={"/google-icon.webp"}
                 alt="Google"
@@ -210,7 +201,7 @@ export default function SignUpPage() {
               onClick={() => signIn("github")}
               className="shadow-sm py-5 text-md rounded-md w-full bg-white text-gray-800 cursor-pointer border-2 hover:text-white hover:bg-gray-700"
             >
-              Sign up with Github{" "}
+              Sign in with Github{" "}
               <Image
                 src={"/github-icon.png"}
                 alt="Github"

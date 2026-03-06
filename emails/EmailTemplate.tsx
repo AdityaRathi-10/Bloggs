@@ -1,5 +1,4 @@
 import { Body, Container, Head, Html, Preview, Text, Button, Section, Hr } from "@react-email/components"
-import Link from "next/link"
 
 interface EmailTemplateProps {
     username: string
@@ -89,7 +88,7 @@ export default function EmailTemplate({ username, url }: EmailTemplateProps) {
 
                 {/* Verification Button */}
                 <div style={{ textAlign: "center", margin: "32px 0" }}>
-                    <Link href={url}>
+                    <a href={url}>
                         <Button
                             style={{
                             backgroundColor: "#1e40af",
@@ -106,7 +105,7 @@ export default function EmailTemplate({ username, url }: EmailTemplateProps) {
                         >
                             Verify Email Address
                         </Button>
-                    </Link>
+                    </a>
                 </div>
             </Section>
 

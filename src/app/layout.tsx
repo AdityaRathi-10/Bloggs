@@ -5,6 +5,7 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import AuthProvider from "@/context/AuthProvider";
 import { ThemeProvider } from "next-themes";
+import RouteLoader from "@/components/RouteLoader";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,7 +40,9 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
             <Toaster />
-            {children}
+            <RouteLoader>
+              {children}
+            </RouteLoader>
           </ThemeProvider>
         </AuthProvider>
       </body>

@@ -2,7 +2,7 @@ import User from "@/models/User";
 import { uploadImageToCloud } from "@/utils/cloudinary";
 import dbConnect from "@/utils/dbConnet";
 import { NextRequest, NextResponse } from "next/server";
-import EmailTemplate from '@/components/EmailTemplate';
+import EmailTemplate from '../../../../emails/EmailTemplate';
 import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);

@@ -6,28 +6,26 @@ import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
-import { signOut } from "next-auth/react";
 import { generateFromEmail } from "unique-username-generator";
 
 export const authOptions: NextAuthOptions = {
+  debug: process.env.NODE_ENV === "development",
+
   providers: [
     GithubProvider({
       clientId: process.env.GITHUB_ID!,
       clientSecret: process.env.GITHUB_SECRET!,
     }),
+
     GoogleProvider({
       clientId: process.env.GOOGLE_ID!,
       clientSecret: process.env.GOOGLE_SECRET!,
     }),
+
     CredentialsProvider({
       id: "credentials",
       name: "Credentials",
       credentials: {
-        username: {
-          label: "Username",
-          type: "text",
-          placeholder: "Enter username",
-        },
         email: {
           label: "Email",
           type: "text",
@@ -39,94 +37,105 @@ export const authOptions: NextAuthOptions = {
           placeholder: "Enter password",
         },
       },
-      async authorize(credentials): Promise<any> {
-        try {
-          await dbConnect();
-          const existingUser = await User.findOne({
-            email: credentials?.email,
-          });
-          if (!existingUser) {
-            throw new Error("User not found");
-          }
-          const isPasswordValid = await bcrypt.compare(
-            credentials?.password!,
-            existingUser.password
-          );
 
-          if (isPasswordValid) {
-            return existingUser;
-          } else {
-            throw new Error("Incorrect password");
-          }
-        } catch (error: any) {
-          throw new Error(error);
-        }
-      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) return null;
+
+        await dbConnect();
+
+        const existingUser = await User.findOne({ email: credentials.email });
+
+        if (!existingUser || !existingUser.password) return null;
+
+        const isPasswordValid = await bcrypt.compare(
+          credentials.password,
+          existingUser.password
+        );
+
+        if (!isPasswordValid) return null;
+
+        // Return a plain object (not the Mongoose document)
+        return {
+          id: existingUser._id!.toString(),
+          email: existingUser.email,
+          name: existingUser.username,
+          image: existingUser.profileImage,
+        };
+      }
     }),
   ],
+
   callbacks: {
-    async session({ session, token }) {
-      if(token) {
-        session.user._id = token._id;
-        session.user.username = token.username;
-        session.user.profileImage = token.profileImage
+    async signIn({ user }) {
+      if (!user?.email) return false;
+
+      await dbConnect();
+
+      const existingUser = await User.findOne({ email: user.email });
+
+      if (!existingUser) {
+        const username = generateFromEmail(user.email);
+
+        let uploadedImageUrl;
+
+        if (user.image) {
+          const res = await fetch(user.image);
+          const blob = await res.blob();
+
+          const result = await uploadImageToCloud(blob);
+          uploadedImageUrl = result?.secure_url;
+        }
+
+        await User.create({
+          email: user.email,
+          username,
+          profileImage: uploadedImageUrl || user.image,
+          password: null,
+        });
       }
-      return session;
+
+      return true;
     },
+
     async jwt({ token, user }) {
-      if(user) {
-        await dbConnect()
-        let existingUser = await User.findOne({ email: user.email });
-        if(existingUser) {
-          token._id = existingUser?.id?.toString() as string
-          token.username = existingUser?.username;
-          token.profileImage = existingUser?.profileImage
-        }
-        else {
-          await signOut({ redirect: true, callbackUrl: "/" })
-        }
+      if (user) {
+        token.email = user.email;
+        token.name = user.name;
+        token.image = user.image;
       }
+
       return token;
     },
-    async signIn({ user }) {
-      await dbConnect();
-      try {
-        const existingUser = await User.findOne({
-          email: user.email,
-        });
-        if (existingUser) return true;
-        const username = generateFromEmail(user.email!)
 
-        let uploadedImageUrl
-        if(user.image) {
-          const res = await fetch(user.image)
-          const blob = await res.blob()
-          uploadedImageUrl  = await uploadImageToCloud(blob)
-        }
-        
-        const newUser = await User.create({
-          username,
-          email: user.email,
-          password: 123,
-          profileImage: uploadedImageUrl,
-        });
-        
-        if (newUser) return true;
-        return false;
-      } catch (error) {
-        return false;
+    async session({ session }) {
+      if (!session.user?.email) return session;
+
+      await dbConnect();
+
+      const dbUser = await User.findOne({ email: session.user.email });
+
+      if (dbUser) {
+        session.user._id = dbUser?._id!.toString();
+        session.user.username = dbUser.username;
+        session.user.profileImage = dbUser.profileImage;
       }
+
+      return session;
     },
+
     async redirect({ baseUrl }) {
       return `${baseUrl}/posts`;
     },
   },
+
   session: {
     strategy: "jwt",
     maxAge: 24 * 60 * 60,
   },
+
   pages: {
     signIn: "/sign-in",
   },
+
   secret: process.env.NEXTAUTH_SECRET,
 };

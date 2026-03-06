@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 export interface TUser extends Document {
     username: string
     email: string
-    password: string
+    password: string | null
     profileImage?: string
     followers: TUser[]
     posts?: TPost[]
@@ -30,6 +30,7 @@ const UserSchema: Schema<TUser> = new Schema({
     },
     password: {
         type: String,
+        default: null
     },
     profileImage: {
         type: String
@@ -66,9 +67,12 @@ const UserSchema: Schema<TUser> = new Schema({
 })
 
 UserSchema.pre("save", async function (next) {
-    const hashedPassword = await bcrypt.hash(this.password, 10)
-    this.password = hashedPassword
-    this.verificationToken = uuidv4()
+    let hashedPassword;
+    if(this.password) {
+        hashedPassword = await bcrypt.hash(this.password, 10)
+        this.password = hashedPassword
+        this.verificationToken = uuidv4()
+    }
     next()
 })
 
