@@ -4,7 +4,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
     const username = request.nextUrl.searchParams.get("username");
-    
     if (!username) {
         return NextResponse.json(
             { success: false, message: "Username is not provided" },
@@ -23,7 +22,7 @@ export async function GET(request: NextRequest) {
             if(user) {
                 return NextResponse.json(
                     { success: false, message: "Username is already taken" },
-                    { status: 400 }
+                    { status: 200 }
                 )
             }
 

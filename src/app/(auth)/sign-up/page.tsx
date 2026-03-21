@@ -15,20 +15,48 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { signIn } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import { CircleCheck, CircleX, Loader2 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import axios, { AxiosError } from "axios";
 import { APIResponse } from "@/utils/ApiResponse";
+import { useDebounceValue } from "usehooks-ts";
 
 export default function SignUpPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [usernameInput, setUsernameInput] = useState("");
+  const [debouncedUsername] = useDebounceValue(usernameInput, 500); // 500ms
+  const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null);
+  const [checkingUsername, setCheckingUsername] = useState(false);
 
   const router = useRouter();
+
+  useEffect(() => {
+    if (!debouncedUsername || debouncedUsername.length < 3) {
+      setUsernameAvailable(null);
+      setCheckingUsername(false);
+      return;
+    }
+    const checkUsername = async () => {
+      setCheckingUsername(true);
+      try {
+        const response = (
+          await axios.get(`/api/sign-up/check-unique?username=${debouncedUsername}`)
+        ).data;
+        setUsernameAvailable(response.success)
+      } catch (error) {
+        console.log("Error", error)
+      } finally {
+        setCheckingUsername(false);
+      }
+    };
+
+    checkUsername();
+  }, [debouncedUsername]);
 
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
@@ -91,10 +119,45 @@ export default function SignUpPage() {
                     <FormControl>
                       <Input
                         className="border dark:border-gray-600"
-                        placeholder="username" {...field}
+                        placeholder="username"
+                        {...field}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          field.onChange(e);
+                          setUsernameInput(value);
+
+                          if (value.length >= 3) {
+                            setCheckingUsername(true);
+                            setUsernameAvailable(null);
+                          } else {
+                            setCheckingUsername(false);
+                            setUsernameAvailable(null);
+                          }
+                        }}
                       />
                     </FormControl>
                     <FormMessage />
+                    {field.value.length >= 3 && (
+                      <div className="text-sm">
+                        {checkingUsername
+                          ? <div className="flex gap-1 items-center">
+                              <p>Checking</p>
+                              <Loader2 className="animate-spin h-4 w-4" />
+                            </div>
+                          : usernameAvailable === null
+                            ? ""
+                            : usernameAvailable
+                              ? <p className="text-green-600 flex items-center gap-1">
+                                  <span>Username is available</span>
+                                  <CircleCheck size={18} />
+                                </p>
+                              : <p className="text-red-600 flex items-center gap-1">
+                                  <span>Username is already taken</span>
+                                  <CircleX size={18} />
+                                </p>
+                        }
+                      </div>
+                    )}
                   </FormItem>
                 )}
               />
