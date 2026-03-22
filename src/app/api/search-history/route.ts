@@ -31,8 +31,6 @@ export async function POST(request: NextRequest) {
         user: user._id
     })
 
-    console.log("A", addQuery)
-
     if(!addQuery) {
         return NextResponse.json({success: false, message: "Error adding new query in search history", status: 500})
     }
@@ -49,7 +47,6 @@ export async function GET() {
     if(!user) {
         return NextResponse.json({success: false, message: "User not found", status: 404})
     }
-    console.log("se", session?.user._id)
     const searchHistory = await SearchHistory.find({
         user: user._id
     }).sort({ createdAt: -1 }).select("query -_id")

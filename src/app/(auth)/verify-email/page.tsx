@@ -1,5 +1,6 @@
 "use client"
 
+import logger from "@/utils/logger";
 import axios from "axios";
 import { Loader2, Mail } from "lucide-react"
 import { signIn, useSession } from "next-auth/react";
@@ -34,7 +35,7 @@ export default function VerifyEmailPage() {
             }
             getVerificationStatus()
         } catch (error) {
-            console.log("Error:", error)
+            logger.error(error)
         }
     }, [token, router])
 

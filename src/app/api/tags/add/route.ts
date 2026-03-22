@@ -5,7 +5,6 @@ import path from "path";
 const filePath = path.join(process.cwd(), 'src/lib/tags.json')
 
 export async function POST(request: NextRequest) {
-    console.log("filePath", filePath)
     const { newTag } = await request.json()
 
     const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'))

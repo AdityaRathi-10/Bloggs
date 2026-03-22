@@ -11,6 +11,7 @@ import { Input } from "./ui/input";
 import axios from "axios";
 import { toast } from "sonner";
 import { useParams, useRouter } from "next/navigation";
+import logger from "@/utils/logger";
 
 interface Comment {
     id: string,
@@ -47,7 +48,7 @@ export default function CommentList({id, commentedBy, createdAt, content, isAuth
             }
             return toast.success(response.data.message)
         } catch (error) {
-            console.log("Error:", error)
+            logger.error(error)
         } finally {
             router.refresh()
         }
@@ -67,7 +68,7 @@ export default function CommentList({id, commentedBy, createdAt, content, isAuth
             }
             return toast(response.data.message)
         } catch (error) {
-            console.log("Error:", error)
+            logger.error(error)
         } finally {
             router.refresh()
         }
@@ -147,7 +148,6 @@ export default function CommentList({id, commentedBy, createdAt, content, isAuth
                                 </DropdownMenuContent> : 
                                 <DropdownMenuContent align="end" className="w-32">
                                     <DropdownMenuItem
-                                        onClick={() => console.log("reply")}
                                         className="cursor-pointer"
                                     >
                                         <Reply className="w-4 h-4 mr-2" />

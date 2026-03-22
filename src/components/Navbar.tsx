@@ -49,6 +49,7 @@ import { formatDate2 } from "@/utils/formatDate"
 import type { TSearchHistory } from "@/models/SearchHistory"
 import { useDebounceCallback } from "usehooks-ts"
 import { Session } from "next-auth"
+import logger from "@/utils/logger"
 
 export default function Navbar() {
   const { data: session, status } = useSession()
@@ -163,7 +164,7 @@ export default function Navbar() {
         },
       )
     } catch (error) {
-      console.log("Error:", error)
+      logger.error(error)
     } finally {
       setNotifications((prev) => {
         if (!prev) return prev

@@ -24,6 +24,7 @@ import { useRouter } from "next/navigation"
 import Reactions from "./Reactions"
 import { useSession } from "next-auth/react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import logger from "@/utils/logger"
 
 type PostCardProps = {
   id: string
@@ -111,7 +112,7 @@ export default function PostCard({
       }
       return toast.success(response.data.message)
     } catch (error) {
-      console.log("Error:", error)
+      logger.error(error)
     } finally {
       router.refresh()
     }

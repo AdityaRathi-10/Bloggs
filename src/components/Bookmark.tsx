@@ -6,6 +6,7 @@ import { Bookmark as AddToWishlist } from "lucide-react"
 import axios from "axios";
 import { toast } from "sonner";
 import { Skeleton } from "./ui/skeleton";
+import logger from "@/utils/logger";
 
 export default function Bookmark({postId, addedToWishlist}: {postId: string, addedToWishlist: boolean}) {
 
@@ -35,7 +36,7 @@ export default function Bookmark({postId, addedToWishlist}: {postId: string, add
             }
             return toast.success(response.data.message)
         } catch (error) {
-            console.log("Error:", error)
+            logger.error(error)
         }
     }
 

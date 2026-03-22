@@ -4,6 +4,7 @@ import dbConnect from "@/utils/dbConnet";
 import { NextRequest, NextResponse } from "next/server";
 import EmailTemplate from '../../../../emails/EmailTemplate';
 import { Resend } from 'resend';
+import logger from "@/utils/logger";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -61,7 +62,7 @@ export async function POST(request: NextRequest) {
     })
 
     if(error) {
-      console.log("Error:", error)
+      logger.error(error)
     }
 
     return NextResponse.json(

@@ -24,6 +24,7 @@ import Image from "next/image";
 import axios, { AxiosError } from "axios";
 import { APIResponse } from "@/utils/ApiResponse";
 import { useDebounceValue } from "usehooks-ts";
+import logger from "@/utils/logger";
 
 export default function SignUpPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -49,7 +50,7 @@ export default function SignUpPage() {
         ).data;
         setUsernameAvailable(response.success)
       } catch (error) {
-        console.log("Error", error)
+        logger.error(error)
       } finally {
         setCheckingUsername(false);
       }
@@ -70,7 +71,6 @@ export default function SignUpPage() {
 
   const onSubmit = async (data: z.infer<typeof signUpSchema>) => {
     setIsSubmitting(true);
-    console.log(selectedFile);
 
     const formData = new FormData()
     formData.append("username", data.username)

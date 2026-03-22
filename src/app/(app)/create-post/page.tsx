@@ -22,6 +22,7 @@ import { toast } from "sonner";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import tags from "@/lib/tags.json"
+import logger from "@/utils/logger";
 
 
 export default function CreatePostPage() {
@@ -118,7 +119,7 @@ export default function CreatePostPage() {
       }
       getPost()
     } catch (error) {
-      console.log("Error:", error)
+      logger.error(error)
     }
   }, [editPostId])
 
